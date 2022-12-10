@@ -9,7 +9,7 @@ import { BackButton } from "../components/BackButton";
 function NewTicket() {
   const { user } = useSelector((state) => state.auth);
   const { isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.ticket
+    (state) => state.tickets
   );
 
   const [name, setName] = useState(user.name);
@@ -20,26 +20,30 @@ function NewTicket() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    if(isError) toast.error(message)
+  useEffect(() => {
+    if (isError) toast.error(message);
 
-    if(isSuccess){
-      dispatch(reset())
-      navigate('/tickets')
+    if (isSuccess) {
+      dispatch(reset());
+      navigate("/tickets");
     }
 
-    dispatch(reset())
-  },[dispatch,isError,isSuccess,navigate,message])
+    dispatch(reset());
+  }, [dispatch, isError, isSuccess, navigate, message]);
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(createTicket({product,description}))
+    if (product === "") {
+      dispatch(createTicket({ product:'iPhone', description }));
+    } else {
+      dispatch(createTicket({ product, description }));
+    }
   };
 
-  if(isLoading) return <Spinner/>
+  if (isLoading) return <Spinner />;
 
   return (
     <>
-      <BackButton url='/' />
+      <BackButton url="/" />
       <section className="heading">
         <h1>Create New Ticket</h1>
         <p> Please fill out the form below</p>
